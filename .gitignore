@@ -28,3 +28,6 @@ settings.json
 # cypress
 /cypress/screenshots
 /cypress/videos
+
+# Ignore execute file
+terraform/.terraform/providers/**/*.exe*
