@@ -1,3 +1,21 @@
+resource "aws_s3_bucket" "website_bucket" {
+  bucket = "my-unique-bucket-name-sdfg43534cgxd"
+}
+
+resource "aws_s3_account_public_access_block" "website_bucket" {
+  block_public_acls   = true
+  block_public_policy = true
+  ignore_public_acls = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_object" "website_bucket" {
+  bucket       = aws_s3_bucket.website_bucket.id
+  key          = "index.html"
+  source       = "index.html"
+  content_type = "text/html"
+}
+
 resource "aws_cloudfront_distribution" "cdn_static_site" {
   enabled             = true
   is_ipv6_enabled     = true
@@ -5,8 +23,9 @@ resource "aws_cloudfront_distribution" "cdn_static_site" {
   comment             = "my cloudfront in front of the s3 bucket"
 
   origin {
-    domain_name              = aws_s3_bucket.my_protected_bucket.bucket_regional_domain_name
-    origin_id                = aws_s3_bucket.my_protected_bucket.id
+    domain_name              = aws_s3_bucket.website_bucket.bucket_regional_domain_name
+    origin_id                = "my-s3-origin"
+ #   origin_access_control_id = aws_cloudfront_origin_access_control.default.id
   }
 
   default_cache_behavior {
@@ -39,14 +58,22 @@ resource "aws_cloudfront_distribution" "cdn_static_site" {
   }
 }
 
+#resource "aws_cloudfront_origin_access_control" "default" {
+#  name                              = "cloudfront OAC"
+#  description                       = "description of OAC"
+#  origin_access_control_origin_type = "s3"
+#  signing_behavior                  = "always"
+#  signing_protocol                  = "sigv4"
+#}
+
 output "cloudfront_url" {
   value = aws_cloudfront_distribution.cdn_static_site.domain_name
 }
 
-data "aws_iam_policy_document" "my_protected_bucket" {
+data "aws_iam_policy_document" "website_bucket" {
   statement {
     actions   = ["s3:GetObject"]
-    resources = ["${aws_s3_bucket.my_protected_bucket.arn}/*"]
+    resources = ["${aws_s3_bucket.website_bucket.arn}/*"]
     principals {
       type        = "Service"
       identifiers = ["cloudfront.amazonaws.com"]
@@ -60,6 +87,6 @@ data "aws_iam_policy_document" "my_protected_bucket" {
 }
 
 resource "aws_s3_bucket_policy" "website_bucket_policy" {
-  bucket = aws_s3_bucket.my_protected_bucket.id
-  policy = data.aws_iam_policy_document.my_protected_bucket.json
+  bucket = aws_s3_bucket.website_bucket.id
+  policy = data.aws_iam_policy_document.website_bucket.json
 }
