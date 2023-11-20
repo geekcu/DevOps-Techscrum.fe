@@ -20,3 +20,9 @@ variable "access_logging_bucket_name" {
   type        = string
   default     = "techscrum-dev-access-log"
 }
+
+variable "domain_name" {
+  type        = string
+  description = "The domain name to use"
+  default     = "techscrum-dev.disite.link"
+}
