@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "website_bucket" {
-  bucket = "my-unique-bucket-name-sdfg43534cgxd"
+  bucket = "my-unique-bucket-name-ghj45dsfg"
 }
 
 resource "aws_s3_account_public_access_block" "website_bucket" {
@@ -25,7 +25,7 @@ resource "aws_cloudfront_distribution" "cdn_static_site" {
   origin {
     domain_name              = aws_s3_bucket.website_bucket.bucket_regional_domain_name
     origin_id                = "my-s3-origin"
- #   origin_access_control_id = aws_cloudfront_origin_access_control.default.id
+  # origin_access_control_id = aws_cloudfront_origin_access_control.default.id
   }
 
   default_cache_behavior {
@@ -57,14 +57,13 @@ resource "aws_cloudfront_distribution" "cdn_static_site" {
     cloudfront_default_certificate = true 
   }
 }
-
-#resource "aws_cloudfront_origin_access_control" "default" {
-#  name                              = "cloudfront OAC"
-#  description                       = "description of OAC"
-#  origin_access_control_origin_type = "s3"
-#  signing_behavior                  = "always"
-#  signing_protocol                  = "sigv4"
-#}
+resource "aws_cloudfront_origin_access_control" "OAC" {
+  name                              = "cloudfront OAC"
+  description                       = "description of OAC"
+  origin_access_control_origin_type = "s3"
+  signing_behavior                  = "always"
+  signing_protocol                  = "sigv4"
+}
 
 output "cloudfront_url" {
   value = aws_cloudfront_distribution.cdn_static_site.domain_name
