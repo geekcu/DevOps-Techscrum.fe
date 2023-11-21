@@ -1,3 +1,17 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
+
+provider "aws" {
+  profile = "default"
+  region  = var.aws_region
+}
+
 resource "aws_s3_bucket" "website_bucket" {
   bucket = "my-unique-bucket-name-ghj45dsfg"
 }
@@ -12,8 +26,8 @@ resource "aws_s3_account_public_access_block" "website_bucket" {
 resource "aws_s3_object" "website_bucket" {
   bucket       = aws_s3_bucket.website_bucket.id
   key          = "index.html"
-  source       = "index.html"
-  content_type = "text/html"
+# source       = "index.html"
+ content_type = "text/html"
 }
 
 resource "aws_cloudfront_distribution" "cdn_static_site" {
@@ -24,8 +38,9 @@ resource "aws_cloudfront_distribution" "cdn_static_site" {
 
   origin {
     domain_name              = aws_s3_bucket.website_bucket.bucket_regional_domain_name
-    origin_id                = "my-s3-origin"
-  # origin_access_control_id = aws_cloudfront_origin_access_control.default.id
+    origin_id                = "techscrum-dev-s3-origin"
+    origin_access_control_id = aws_cloudfront_origin_access_control.OAC.id
+
   }
 
   default_cache_behavior {
@@ -36,7 +51,7 @@ resource "aws_cloudfront_distribution" "cdn_static_site" {
 
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "my-s3-origin"
+    target_origin_id = "techscrum-dev-s3-origin"
 
     forwarded_values {
       query_string = false
@@ -58,7 +73,7 @@ resource "aws_cloudfront_distribution" "cdn_static_site" {
   }
 }
 resource "aws_cloudfront_origin_access_control" "OAC" {
-  name                              = "cloudfront OAC"
+  name                              = "TechScrum-Dev OAC"
   description                       = "description of OAC"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
