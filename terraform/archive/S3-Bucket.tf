@@ -15,13 +15,6 @@ resource "aws_kms_alias" "kms_s3_key_alias" {
     target_key_id = aws_kms_key.kms_s3_key.key_id
 }
 
-########################
-# Bucket creation
-########################
-resource "aws_s3_bucket" "my_protected_bucket" {
-  bucket = var.bucket_name
-}
-
 ##########################
 # Bucket Ownership Controls
 ##########################

@@ -13,9 +13,8 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "website_bucket" {
-  bucket = "my-unique-bucket-name-ghj45dsfg"
+  bucket = var.website_bucket
 }
-
 resource "aws_s3_account_public_access_block" "website_bucket" {
   block_public_acls   = true
   block_public_policy = true
@@ -29,7 +28,6 @@ resource "aws_s3_object" "website_bucket" {
 # source       = "index.html"
  content_type = "text/html"
 }
-
 resource "aws_cloudfront_distribution" "cdn_static_site" {
   enabled             = true
   is_ipv6_enabled     = true
@@ -42,6 +40,7 @@ resource "aws_cloudfront_distribution" "cdn_static_site" {
     origin_access_control_id = aws_cloudfront_origin_access_control.OAC.id
 
   }
+
 
   default_cache_behavior {
     min_ttl                = 0

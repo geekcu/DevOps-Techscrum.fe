@@ -1,16 +1,16 @@
 variable "aws_region" {
   description = "AWS region"
   type        = string
-  default     = "us-east-1"
+  default     = "ap-southeast-2"
 }
 
-variable "bucket_name" {
+variable "website_bucket" {
   description = "S3 bucket name"
   type        = string
   default     = "techscrum-dev"
 
   validation {
-    condition = length(var.bucket_name) > 2 && length(var.bucket_name) < 64 && can(regex("^[0-9A-Za-z-]+$", var.bucket_name))
+    condition = length(var.website_bucket) > 2 && length(var.website_bucket) < 64 && can(regex("^[0-9A-Za-z-]+$", var.website_bucket))
     error_message = "The bucket_name must follow naming rules. Check them out at: https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html."
   }
 }
