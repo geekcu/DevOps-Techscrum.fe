@@ -41,6 +41,7 @@ resource "aws_cloudfront_distribution" "cdn_static_site" {
 
   }
 
+  aliases = [var.domain_name]
 
   default_cache_behavior {
     min_ttl                = 0
@@ -68,7 +69,9 @@ resource "aws_cloudfront_distribution" "cdn_static_site" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true 
+    acm_certificate_arn = "arn:aws:acm:us-east-1:972502737060:certificate/5da54843-4900-41ad-a878-fc4e4290f427"
+    ssl_support_method = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
   }
 }
 resource "aws_cloudfront_origin_access_control" "OAC" {
