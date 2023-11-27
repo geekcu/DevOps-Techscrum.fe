@@ -63,4 +63,3 @@ resource "aws_route53_record" "apex" {
     evaluate_target_health = false
   }
 }
-
