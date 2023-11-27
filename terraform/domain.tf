@@ -3,10 +3,6 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_route53_zone" "this" {
-  name = "disite.link"
-}
-
 resource "aws_acm_certificate" "cert" {
   domain_name       = var.domain_name
   validation_method = "DNS"
