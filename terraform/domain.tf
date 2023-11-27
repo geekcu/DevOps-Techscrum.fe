@@ -3,6 +3,12 @@ provider "aws" {
   region = "us-east-1"
 }
 
+resource "aws_route53_zone" "primary" {
+  name          = "disite.link"
+  comment       = "Route 53 Zone"
+  force_destroy = false  # You may want to set this to false to prevent accidental deletion
+}
+
 resource "aws_acm_certificate" "cert" {
   domain_name       = var.domain_name
   validation_method = "DNS"
@@ -25,7 +31,7 @@ resource "aws_route53_record" "cert_validation" {
     }
 
     allow_overwrite = true
-   name            = each.value.name
+    name            = each.value.name
     records         = [each.value.record]
     type            = each.value.type
     zone_id         = "Z09214101IU8I71TAQICS"
@@ -44,9 +50,6 @@ resource "aws_route53_record" "www" {
     zone_id                = aws_cloudfront_distribution.cdn_static_site.hosted_zone_id
     evaluate_target_health = false
   }
-}
-  output "debug" {
-  value = aws_route53_record.www
 }
 
 resource "aws_route53_record" "apex" {
