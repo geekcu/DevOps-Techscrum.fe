@@ -34,34 +34,25 @@ resource "aws_route53_record" "cert_validation" {
 resource "aws_acm_certificate_validation" "cert" {
   certificate_arn         = aws_acm_certificate.cert.arn
   validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
-
 }
 resource "aws_route53_record" "www" {
-  count   = var.destroy_records ? 1 : 0
   zone_id = "Z09214101IU8I71TAQICS"
   name    = "www.${var.domain_name}"
   type    = "A"
-
-lifecycle {
-  create_before_destroy = true
-  }
-
   alias {
     name                   = aws_cloudfront_distribution.cdn_static_site.domain_name
     zone_id                = aws_cloudfront_distribution.cdn_static_site.hosted_zone_id
     evaluate_target_health = false
   }
 }
+  output "debug" {
+  value = aws_route53_record.www
+}
 
 resource "aws_route53_record" "apex" {
-  count   = var.destroy_records ? 1 : 0
   zone_id = "Z09214101IU8I71TAQICS"
   name    = var.domain_name
   type    = "A"
-
-  lifecycle {
-    create_before_destroy = true
-  }
 
   alias {
     name                   = aws_cloudfront_distribution.cdn_static_site.domain_name
