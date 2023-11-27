@@ -3,6 +3,10 @@ provider "aws" {
   region = "us-east-1"
 }
 
+resource "aws_route53_zone" "this" {
+  name = "disite.link"
+}
+
 resource "aws_acm_certificate" "cert" {
   domain_name       = var.domain_name
   validation_method = "DNS"
@@ -15,7 +19,6 @@ resource "aws_acm_certificate" "cert" {
     create_before_destroy = true
   }
 }
-
 resource "aws_route53_record" "cert_validation" {
     for_each = {
       for dvo in aws_acm_certificate.cert.domain_validation_options : dvo.domain_name => {
@@ -26,7 +29,7 @@ resource "aws_route53_record" "cert_validation" {
     }
 
     allow_overwrite = true
-    name            = each.value.name
+   name            = each.value.name
     records         = [each.value.record]
     type            = each.value.type
     zone_id         = "Z09214101IU8I71TAQICS"
@@ -37,11 +40,15 @@ resource "aws_acm_certificate_validation" "cert" {
   validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
 
 }
-
 resource "aws_route53_record" "www" {
+  count   = var.destroy_records ? 1 : 0
   zone_id = "Z09214101IU8I71TAQICS"
   name    = "www.${var.domain_name}"
   type    = "A"
+
+lifecycle {
+  create_before_destroy = true
+  }
 
   alias {
     name                   = aws_cloudfront_distribution.cdn_static_site.domain_name
@@ -51,9 +58,14 @@ resource "aws_route53_record" "www" {
 }
 
 resource "aws_route53_record" "apex" {
+  count   = var.destroy_records ? 1 : 0
   zone_id = "Z09214101IU8I71TAQICS"
   name    = var.domain_name
   type    = "A"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 
   alias {
     name                   = aws_cloudfront_distribution.cdn_static_site.domain_name

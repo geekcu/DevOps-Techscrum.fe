@@ -26,3 +26,9 @@ variable "domain_name" {
   description = "The domain name to use"
   default     = "techscrum-dev.disite.link"
 }
+
+variable "destroy_records" {
+  description = "Set to true to destroy Route 53 records during terraform destroy."
+  type        = bool
+  default     = true
+}
