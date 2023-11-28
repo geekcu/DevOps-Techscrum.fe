@@ -37,6 +37,7 @@ pipeline {
                         }   else if (params.Terraform_Action == 'apply') {
                             sh 'terraform -chdir=terraform apply -auto-approve'
                         }   else if (params.Terraform_Action == 'destroy') {
+                            sh 'terraform state rm'
                             sh 'terraform -chdir=terraform destroy -auto-approve'
                         } else {
                             error "Invalid value for Terraform_Action: ${params.Terraform_Action}"
