@@ -3,11 +3,11 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_route53_zone" "primary" {
-  name          = "disite.link"
-  comment       = "Route 53 Zone"
-  force_destroy = false  # You may want to set this to false to prevent accidental deletion
-}
+# resource "aws_route53_zone" "primary" {
+#  name          = "disite.link"
+#  comment       = "Route 53 Zone"
+#  force_destroy = false  # You may want to set this to false to prevent accidental deletion
+#}
 
 resource "aws_acm_certificate" "cert" {
   domain_name       = var.domain_name
