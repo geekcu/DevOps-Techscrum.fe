@@ -41,9 +41,9 @@ resource "aws_route53_zone" "primary" {
   force_destroy = false
 }
 
-data "aws_route53_zone" "existing_zone" {
-  zone_id = "Z09214101IU8I71TAQICS"  # replace with your actual zone ID
-}
+#data "aws_route53_zone" "existing_zone" {
+#  zone_id = "Z09214101IU8I71TAQICS"  # replace with your actual zone ID
+#}
 
 
 resource "aws_route53_record" "www" {
