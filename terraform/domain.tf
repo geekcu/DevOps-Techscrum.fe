@@ -3,17 +3,6 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_route53_zone" "my_hosted_zone" {
-  name          = "techscrum-dev.disite.link"
-  force_destroy = false
-}
-
-# resource "aws_route53_zone" "primary" {
-#  name          = "disite.link"
-#  comment       = "Route 53 Zone"
-#  force_destroy = false  # You may want to set this to false to prevent accidental deletion
-#}
-
 resource "aws_acm_certificate" "cert" {
   domain_name       = var.domain_name
   validation_method = "DNS"
@@ -46,6 +35,17 @@ resource "aws_acm_certificate_validation" "cert" {
   certificate_arn         = aws_acm_certificate.cert.arn
   validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
 }
+
+resource "aws_route53_zone" "primary" {
+  name          = "disite.link"  # replace with your actual domain name
+  force_destroy = false
+}
+
+data "aws_route53_zone" "existing_zone" {
+  zone_id = "Z09214101IU8I71TAQICS"  # replace with your actual zone ID
+}
+
+
 resource "aws_route53_record" "www" {
   zone_id = "Z09214101IU8I71TAQICS"
   name    = "www.${var.domain_name}"
