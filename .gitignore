@@ -29,14 +29,10 @@ settings.json
 /cypress/screenshots
 /cypress/videos
 
-# Ignore execute file
-terraform/.terraform/providers/registry.terraform.io/hashicorp/aws/4.0.0/windows_386/terraform-provider-aws_v4.0.0_x5.exe
-terraform/.terraform/providers/registry.terraform.io/hashicorp/aws/5.26.0/windows_386/terraform-provider-aws_v5.26.0_x5.exe
+# local .terraform dir
+terraform/.terraform/
 
 # tfstate files
-./terraform/*.tfstate
-./terraform/*.tfstate.backup
-./terraform/.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
 
-# Module directory
-.terraform/
