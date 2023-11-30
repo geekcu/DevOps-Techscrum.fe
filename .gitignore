@@ -36,7 +36,7 @@ terraform/.terraform/providers/registry.terraform.io/hashicorp/aws/5.26.0/window
 # tfstate files
 ./terraform/*.tfstate
 ./terraform/*.tfstate.backup
-./terraform/*.hcl
+./terraform/.terraform.lock.hcl
 
 # Module directory
 .terraform/
