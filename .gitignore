@@ -32,3 +32,10 @@ settings.json
 # Ignore execute file
 terraform/.terraform/providers/registry.terraform.io/hashicorp/aws/4.0.0/windows_386/terraform-provider-aws_v4.0.0_x5.exe
 terraform/.terraform/providers/registry.terraform.io/hashicorp/aws/5.26.0/windows_386/terraform-provider-aws_v5.26.0_x5.exe
+
+# Compiled files
+*.tfstate
+*.tfstate.backup
+ 
+# Module directory
+.terraform/

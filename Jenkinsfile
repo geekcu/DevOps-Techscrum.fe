@@ -31,7 +31,7 @@ pipeline {
             steps {
                 echo "${params.Terraform_Action}"
                 withAWS(credentials: 'aws-lidi', region: 'ap-southeast-2') {
-                script {    
+                script {   
                         if (params.Terraform_Action == 'plan') {
                             sh 'terraform -chdir=terraform plan'
                         }   else if (params.Terraform_Action == 'apply') {
