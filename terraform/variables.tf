@@ -15,7 +15,7 @@ variable "website_bucket" {
   }
 }
 
-variable "access_logging_bucket_name" {
+variable "log_bucket" {
   description = "S3 bucket name for access logging storage"
   type        = string
   default     = "techscrum-dev-access-log"

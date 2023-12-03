@@ -19,6 +19,12 @@ terraform {
 resource "aws_s3_bucket" "website_bucket" {
   bucket = var.website_bucket
 }
+
+resource "aws_s3_bucket_policy" "website_bucket_policy" {
+  bucket = aws_s3_bucket.website_bucket.id
+  policy = data.aws_iam_policy_document.website_bucket.json
+}
+
 resource "aws_s3_account_public_access_block" "website_bucket" {
   block_public_acls   = true
   block_public_policy = true
@@ -32,6 +38,37 @@ resource "aws_s3_object" "website_bucket" {
 # source       = "index.html"
  content_type = "text/html"
 }
+
+resource "aws_s3_bucket" "log_bucket" {
+  bucket = var.log_bucket
+}
+
+resource "aws_s3_bucket_logging""log_bucket" {
+  bucket = var.website_bucket
+
+  target_bucket =  aws_s3_bucket.log_bucket.id
+  target_prefix = " "
+}
+
+resource "aws_s3_bucket_policy" "log_bucket_policy" {
+  bucket = aws_s3_bucket.log_bucket.id
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Id      = "S3-Console-Auto-Gen-Policy-1699224162311",
+    Statement = [
+      {
+        Sid       = "S3PolicyStmt-DO-NOT-MODIFY-1699224162205",
+        Effect    = "Allow",
+        Principal = {
+          Service = "logging.s3.amazonaws.com"
+        },
+        Action   = "s3:PutObject",
+        Resource = "${aws_s3_bucket.log_bucket.arn}/*",
+      },
+    ],
+  })
+}
+
 resource "aws_cloudfront_distribution" "cdn_static_site" {
   enabled             = true
   is_ipv6_enabled     = true
@@ -104,9 +141,4 @@ data "aws_iam_policy_document" "website_bucket" {
       values   = [aws_cloudfront_distribution.cdn_static_site.arn]
     }
   }
-}
-
-resource "aws_s3_bucket_policy" "website_bucket_policy" {
-  bucket = aws_s3_bucket.website_bucket.id
-  policy = data.aws_iam_policy_document.website_bucket.json
 }
