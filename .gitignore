@@ -36,3 +36,5 @@ terraform/.terraform/
 *.tfstate
 *.tfstate.*
 
+# terraform lock file
+terraform/.terraform.lock.hcl
