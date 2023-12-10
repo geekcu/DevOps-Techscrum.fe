@@ -4,27 +4,16 @@ variable "aws_region" {
   default     = "ap-southeast-2"
 }
 
-variable "aws_region_ha" {
-  description = "AWS region_ha"
-  type        = string
-  default     = "ap-southeast-1"
-}
-
-
 variable "website_bucket" {
   description = "S3 bucket name"
   type        = string
   default     = "techscrum-dev"
 
+  validation {
+    condition = length(var.website_bucket) > 2 && length(var.website_bucket) < 64 && can(regex("^[0-9A-Za-z-]+$", var.website_bucket))
+    error_message = "The bucket_name must follow naming rules. Check them out at: https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html."
+  }
 }
-
-variable "website_bucket_ha" {
-  description = "S3 bucket name"
-  type        = string
-  default     = "techscrum-dev-sg"
-
-}
-
 
 variable "log_bucket" {
   description = "S3 bucket name for access logging storage"
