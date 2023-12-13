@@ -1,25 +1,16 @@
 terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-  }
-}
-
-terraform {
   required_version = ">= 1.3.0"
 }
 
-provider "aws" {
-  region  = var.aws_region
-  alias   = "primary_region"
-}
+#provider "aws" {
+#  region  = var.aws_region
+#  alias   = "primary_region"
+#}
 
-provider "aws" {
-  region  = var.aws_region_ha
-  alias   = "secondary_region"
-}
+#provider "aws" {
+#  region  = var.aws_region_ha
+#  alias   = "secondary_region"
+#}
 
 resource "aws_s3_bucket" "website_bucket" {
   provider = aws.primary_region
@@ -180,10 +171,6 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     ssl_support_method = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
   }
-}
-
-output "cloudfront_url" {
-  value = aws_cloudfront_distribution.s3_distribution.domain_name
 }
 
 data "aws_iam_policy_document" "website_bucket" {
