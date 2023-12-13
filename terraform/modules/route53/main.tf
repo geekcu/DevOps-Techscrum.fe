@@ -28,7 +28,7 @@ resource "aws_route53_record" "cert_validation" {
     name            = each.value.name
     records         = [each.value.record]
     type            = each.value.type
-    zone_id         = "Z09214101IU8I71TAQICS"
+    zone_id         = var.zone_id
     ttl             = 60
 }
 resource "aws_acm_certificate_validation" "cert" {
@@ -37,12 +37,12 @@ resource "aws_acm_certificate_validation" "cert" {
 }
 
 data "aws_route53_zone" "existing_zone" {
-  name         = "disite.link"
+  name         = var.existing_zone
   private_zone = false
 }
 
 #resource "aws_route53_record" "www" {
-#  zone_id = "Z09214101IU8I71TAQICS"
+#  zone_id = var.zone_id
 #  name    = "www.${var.domain_name}"
 #  type    = "A"
 #  alias {
@@ -53,7 +53,7 @@ data "aws_route53_zone" "existing_zone" {
 #}
 
 resource "aws_route53_record" "apex" {
-  zone_id = "Z09214101IU8I71TAQICS"
+  zone_id = var.zone_id
   name    = var.domain_name
   type    = "A"
 
