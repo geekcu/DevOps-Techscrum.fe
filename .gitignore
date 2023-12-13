@@ -38,3 +38,6 @@ terraform/.terraform/
 
 # terraform lock file
 terraform/.terraform.lock.hcl
+
+# Ignore terraform backup
+terraform/backup
