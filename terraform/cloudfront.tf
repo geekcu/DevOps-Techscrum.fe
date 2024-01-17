@@ -112,6 +112,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   is_ipv6_enabled     = true
   default_root_object = "index.html"
   comment             = "my cloudfront in front of the s3 bucket"
+  web_acl_id          = "aws_wafv2_web_acl.waf_techscurm.arn"
 
   origin_group {
     origin_id = "groupS3"
