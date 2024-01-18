@@ -12,6 +12,13 @@ variable "aws_region_ha" {
   default     = "ap-southeast-1"
 }
 
+# Provider Variable
+variable "aws_region_cloudfront" {
+  description = "AWS region_cloudfront"
+  type        = string
+  default     = "us-east-1"
+}
+
 # Bucket Variable
 variable "website_bucket" {
   description = "S3 bucket name"

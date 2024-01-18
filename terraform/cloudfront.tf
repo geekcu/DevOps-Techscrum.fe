@@ -2,15 +2,20 @@ terraform {
   required_version = ">= 1.3.0"
 }
 
-#provider "aws" {
-#  region  = var.aws_region
-#  alias   = "primary_region"
-#}
+provider "aws" {
+  region  = var.aws_region
+  alias   = "primary_region"
+}
 
-#provider "aws" {
-#  region  = var.aws_region_ha
-#  alias   = "secondary_region"
-#}
+provider "aws" {
+  region  = var.aws_region_ha
+  alias   = "secondary_region"
+}
+
+provider "aws" {
+  region  = var.aws_region_cloudfront
+  alias   = "cloudfront_region"
+}
 
 resource "aws_s3_bucket" "website_bucket" {
   provider = aws.primary_region
@@ -112,7 +117,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   is_ipv6_enabled     = true
   default_root_object = "index.html"
   comment             = "my cloudfront in front of the s3 bucket"
-  web_acl_id          = "aws_wafv2_web_acl.waf_techscurm.arn"
+  web_acl_id          = aws_wafv2_web_acl.waf_techscurm.arn
+  #web_acl_id          = "arn:aws:wafv2:us-east-1:972502737060:global/webacl/north_america_access_control/c26817b3-fb50-43ea-af4b-74b603a00899"
 
   origin_group {
     origin_id = "groupS3"
